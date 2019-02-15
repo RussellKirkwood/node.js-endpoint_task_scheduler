@@ -1,0 +1,4 @@
+{"endpoints":[
+{"name":"firstendpoint","url":"https://xxxxxx.com/aaaa","method":"post","milliseconds":60000}
+,{"name":"secondendpoint","url":"https://zzzzz.com/api/aaa","method":"post","milliseconds":3000}
+]}
