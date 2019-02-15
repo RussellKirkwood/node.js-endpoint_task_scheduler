@@ -23,15 +23,13 @@ module.exports =
 
      if (fs.existsSync(fileName)) {
         // Do something
-        endPointsArray = readEndPointsJson(fileName);
-        //console.log('endpointsarray ' + endPointsArray);
+        endPointsArray = readEndPointsJson(fileName);        
     }
     else
     {
         fs.writeFile(fileName, json, 'utf8');
     }    
-
-       //console.log('endpointsarray2 ' + endPointsArray);
+       
        return endPointsArray;
   }
 
