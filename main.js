@@ -7,7 +7,7 @@ const fetch = require("node-fetch");
 const apiURL1 = "";
 const apiURL2 ="";
 const apiURL3 ="";
-var endpointhelper = require('./endpointconfighelper.js');
+var confighelper = require('./confighelper.js');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -62,7 +62,7 @@ app.on('activate', () => {
   Menu.setApplicationMenu(menu)
 }
 
-var apiStatus = "Start APIEndPoint Caller";
+var apiStatus = "Start EndPoint";
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -93,15 +93,15 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 function executeCallToAPI(){
 
   // first read endpoints.json to get endpoints
-  var endpointsArray = endpointhelper.accessEndPointsConfigFile();
-  console.log('Starting API EndPoint Caller. \r\n');
+  var endpointsArray = confighelper.accessEndPointsConfigFile();
+  console.log('Starting EndPoint Caller. \r\n');
   console.log('Reading EndPoints.json file for list of endpoints. \r\n' + endpointsArray);
 
   // Now loop thru Endpoints
   var endpointsList = JSON.parse(endpointsArray);  
   win.webContents.send('endpointsList', endpointsList);
 
-  console.log('Executing API Calls ' );
+  console.log('Executing Calls ' );
 
 for(i = 0; i < endpointsList.endpoints.length; i += 1) {
 
@@ -131,14 +131,7 @@ for(i = 0; i < endpointsList.endpoints.length; i += 1) {
   }
   
   }
-
   
-
-    
-  // This runs caller and sets on Timer
-  // setInterval(function(){
-  //       postcallToAPI()
-  //   }, 10000);   
 }
 
 function postcallToAPI(name, url) 
@@ -149,16 +142,13 @@ function postcallToAPI(name, url)
         // Do first call to API
         fetch(url, {method: "POST"})        
         .then(response => {
-          response.json().then(json => {
-            //apiStatus = Date() + ' Result: ' + JSON.stringify(json)  ;
+          response.json().then(json => {            
             var currentdate = new Date(); 
-            win.webContents.send('endpointResults', currentdate + ' ' + name + ' ' + JSON.stringify(json));
-            //console.log(apiStatus);
+            win.webContents.send('endpointResults', currentdate + ' ' + name + ' ' + JSON.stringify(json));            
           });
         })
         .catch(error => {
-          apiStatus = error;
-          //console.log(error);
+          apiStatus = error;          
           var currentdate = new Date(); 
           win.webContents.send('endpointResults', currentdate + ': Error ' + error + name + ' ' + url);
         });  
