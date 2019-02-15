@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+.bodycontainer { max-height: 250px; width: 100%; margin: 0; overflow-y: auto; }
+.table-scrollable { margin: 0; padding: 0; }
+
+.table-condensed{
+  font-size: 10px;
+}
+</style>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Russell Kirkwood">
+
+    <title>API Caller</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="node_modules/css/landing-page.css" rel="stylesheet">
+
+<!-- Insert this line above script imports  -->
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="node_modules/jquery/jquery.min.js"></script>
+    <script src="node_modules/popper/popper.min.js"></script>
+    <script src="node_modules/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Insert this line after script imports -->
+<script>if (window.module) module = window.module;</script>
+
+  </head>
+
+  <script>
+    
+const ipcRenderer = require('electron').ipcRenderer;
+//var ipcRenderer = require('electron').ipcRenderer;
+
+//console.log(ipcRenderer.sendSync('synchronous-message', 'ping')); // gets message from main.js
+
+// // This looks for message from main.js and puts into table
+// ipcRenderer.on('asynchronous-reply', function(event, arg) {
+//   $("#responseTable tbody").prepend("<tr><td>" + Date() + "</td><td>" + arg + "</td></tr>");
+//   //$('#status').text(arg);
+//   console.log(arg); // gets message from main.js
+
+//   //console.log("store" + arg);
+// });
+
+
+
+// This is if I wanted to keep calling MAIN
+///function myTimedCalltoMain() {
+// This sends message to main.js
+///ipcRenderer.send('asynchronous-message', '');
+//     // console.log(' each 1 second...');
+//}
+
+// renderer process
+//var ipcRenderer = require('electron').ipcRenderer;
+///}
+//var myVar = setInterval(myTimedCalltoMain, 5000);
+
+  </script>
+
+<script>
+  // This gets the Endpoints List from MAIN. It waits until Message comes from MAIN.
+  require('electron').ipcRenderer.on('endpointsList', (event, message) => {
+    for(i = 0; i < message.endpoints.length; i += 1) {
+      $("#endpointsTable tbody").prepend("<tr><td>" + message.endpoints[i].name + "</td><td>" + message.endpoints[i].url + "</td><td>" + message.endpoints[i].method + "</td><td>" + message.endpoints[i].milliseconds + " ms</td></tr>");
+        }     
+  })
+
+  // This gets the Endpoints call results from MAIN. It waits until Message comes from MAIN.
+  require('electron').ipcRenderer.on('endpointResults', (event, message) => {
+    //for(i = 0; i < message2.length; i += 1) {
+      var rowCount = $('#endpointResultTable tr').length;
+      if (rowCount > 6)
+      {
+        $('#endpointResultTable tr:last').remove();
+      }      
+      $("#endpointResultTable tbody").prepend("<tr><td>" + message + "</td></tr>");
+      //console.log(message2[i]);
+        //}     
+  })
+</script>
+
+  <body>     
+      <div class="container">
+        <div class="text-primary" style="text-align: center" >
+          <h2 style="text-align: center">API EndPoint Caller</h2>          
+          <hr class="intro-divider">          
+        </div>
+      </div>   
+
+<!-- Page Content -->
+<div class="text-primary" style="text-align: center" >
+    <h5 style="text-align: left">EndPoints List:</h5>   
+  </div>
+
+      <div class="table-responsive">
+          <table class="table table-hover table-striped table-condensed table-scrollable" id="endpointsTable">
+              <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Method</th>
+                    <th>Frequency</th> 
+                  </tr>
+              </thead>
+              <tbody></tbody>
+          </table>          
+          </div>                  
+         
+
+          <hr class="intro-divider">   
+
+          <div class="text-primary" style="text-align: center" >
+              <h5 style="text-align: left">Call Results:</h5>         
+                 
+            </div>
+
+          <div class="table-responsive">
+              <table class="table table-hover table-striped table-condensed table-scrollable" id="endpointResultTable">
+                  <thead>
+                      <tr>
+                        <th></th>                       
+                      </tr>
+                  </thead>
+                  <tbody></tbody>
+              </table>          
+              </div>                  
+  
+  </body>
+
+</html>
